@@ -1,0 +1,22 @@
+package {{componentBasePackage}}.impl.businesslogic;
+
+import {{componentBasePackage}}.api.{{componentName}}Component;
+import {{componentBasePackage}}.api.types.{{componentName}}DO;
+import {{componentBasePackage}}.impl.businesslogic.logic.{{componentName}}Logic;
+import {{componentBasePackage}}.impl.businesslogic.mapper.{{componentName}}Mapper;
+
+/**
+ * TODO [AL]: Add class documentation
+ *
+ * @author Andre Lehnert, eXXcellent solutions consulting and software gmbh
+ */
+public class {{componentName}}Facade {
+
+  private final {{componentName}}Logic {{lower componentName}}Logic;
+
+  public {{componentName}}Facade({{componentName}}Logic {{lower componentName}}Logic) {
+    this.{{lower componentName}}Logic = {{lower componentName}}Logic;
+  }
+
+
+}

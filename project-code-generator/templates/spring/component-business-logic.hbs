@@ -1,0 +1,32 @@
+package {{componentBasePackage}}.impl.businesslogic.logic;
+
+{{#if hasRepository}}
+import {{componentBasePackage}}.impl.data.{{componentName}}Repository;
+
+{{/if}}
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ * TODO [AL]: Add class documentation
+ *
+ * @author Andre Lehnert, eXXcellent solutions consulting and software gmbh
+ */
+ @Component
+public class {{componentName}}Logic {
+
+  {{#if hasRepository}}
+  private final {{componentName}}Repository {{lower componentName}}Repository;
+
+  @Autowired
+  public {{componentName}}Logic({{componentName}}Repository {{lower componentName}}Repository) {
+    this.{{lower componentName}}Repository = {{lower componentName}}Repository;
+  }
+  {{else}}
+  @Autowired
+  public {{componentName}}Logic() {
+
+  }
+  {{/if}}
+
+}

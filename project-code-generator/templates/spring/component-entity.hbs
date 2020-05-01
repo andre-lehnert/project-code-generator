@@ -1,0 +1,29 @@
+package {{componentBasePackage}}.impl.data.entities;
+
+import javax.persistence.*;
+
+/**
+ * TODO [AL]: Add class documentation
+ *
+ * @author Andre Lehnert, eXXcellent solutions consulting and software gmbh
+ */
+@Table(name = "{{lower componentName}}")
+@Entity
+public class {{componentName}}Entity {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Long id;
+
+  public {{componentName}}Entity() {
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+}

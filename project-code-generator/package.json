@@ -1,0 +1,7 @@
+{
+  "name": "java-project-code-generator",
+  "version": "1.0.0",
+  "dependencies": {
+    "plop": "2.5.4"
+  }
+}
