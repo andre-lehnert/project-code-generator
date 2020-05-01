@@ -48,12 +48,6 @@ ${parameters}
       message: 'Enter the componentName, e.g. "Recipient", "User"',
       default: 'My'
     },
-    {
-      type: 'confirm',
-      name: 'hasRepository',
-      message: 'True, if the component has a data repository to access the database',
-      default: false
-    },
   ];
   const createSpringComponent =  {
     type: 'createComponent',
@@ -65,6 +59,14 @@ ${parameters}
     componentEntityTemplate: './templates/spring/component-entity.hbs',
     componentRepositoryTemplate: './templates/spring/component-repository.hbs',
 
+    resourceTemplate: './templates/spring-resource/crud-resource.hbs',
+    resourceTransferObjectTemplate: './templates/spring-resource/resource-transfer-object.hbs',
+    resourceTransferObjectMapperTemplate: './templates/spring-resource/resource-transfer-object-mapper.hbs',
+    resourceCompositeTransferObjectTemplate: './templates/spring-resource/resource-composite-transfer-object.hbs',
+  };
+
+  const createSpringResource =  {
+    type: 'createComponent',
     resourceTemplate: './templates/spring-resource/crud-resource.hbs',
     resourceTransferObjectTemplate: './templates/spring-resource/resource-transfer-object.hbs',
     resourceTransferObjectMapperTemplate: './templates/spring-resource/resource-transfer-object-mapper.hbs',
@@ -90,9 +92,6 @@ ${parameters}
   });
 
   plop.setActionType('createComponent', function (answers, config, plop) {
-    const packagePath = answers.componentPackage.split('.').join('/');
-    const basePath = [answers.componentPath, packagePath, answers.componentName.toLowerCase()].join('/');
-    makeDir(basePath);
 
     const hasResource = !!answers.resourcePackage;
     let resourceBasePath;
@@ -116,46 +115,52 @@ ${parameters}
       plop: plop,
     };
 
-    // api
-    const apiBasePath = [basePath, 'api'].join('/');
-    makeDir(apiBasePath);
-    renderFile(configuration, config.componentInterfaceTemplate, apiBasePath, 'Component.java');
+    if (!!config.componentInterfaceTemplate) {
+      const packagePath = answers.componentPackage.split('.').join('/');
+      const basePath = [answers.componentPath, packagePath, answers.componentName.toLowerCase()].join('/');
+      makeDir(basePath);
 
-    // api.types
-    const typesBasePath = [apiBasePath, 'types'].join('/');
-    makeDir(typesBasePath);
-    renderFile(configuration, config.componentDataObjectTemplate, typesBasePath, 'DO.java');
+      // api
+      const apiBasePath = [basePath, 'api'].join('/');
+      makeDir(apiBasePath);
+      renderFile(configuration, config.componentInterfaceTemplate, apiBasePath, 'Component.java');
 
-    // impl
-    const implBasePath = [basePath, 'impl'].join('/');
-    makeDir(implBasePath);
+      // api.types
+      const typesBasePath = [apiBasePath, 'types'].join('/');
+      makeDir(typesBasePath);
+      renderFile(configuration, config.componentDataObjectTemplate, typesBasePath, 'DO.java');
 
-    // impl.businesslogic
-    const implBusinessBasePath = [implBasePath, 'businesslogic'].join('/');
-    makeDir(implBusinessBasePath);
-    renderFile(configuration, config.componentFacadeTemplate, implBusinessBasePath, 'Facade.java');
+      // impl
+      const implBasePath = [basePath, 'impl'].join('/');
+      makeDir(implBasePath);
 
-    // impl.businesslogic.logic
-    const implBusinessLogicBasePath = [implBusinessBasePath, 'logic'].join('/');
-    makeDir(implBusinessLogicBasePath);
-    renderFile(configuration, config.componentBusinessLogicTemplate, implBusinessLogicBasePath, 'Logic.java');
+      // impl.businesslogic
+      const implBusinessBasePath = [implBasePath, 'businesslogic'].join('/');
+      makeDir(implBusinessBasePath);
+      renderFile(configuration, config.componentFacadeTemplate, implBusinessBasePath, 'Facade.java');
 
-    // impl.businesslogic.mapper
-    const implMapperBasePath = [implBusinessBasePath, 'mapper'].join('/');
-    makeDir(implMapperBasePath);
-    renderFile(configuration, config.componentDataObjectMapperTemplate, implMapperBasePath, 'Mapper.java');
+      // impl.businesslogic.logic
+      const implBusinessLogicBasePath = [implBusinessBasePath, 'logic'].join('/');
+      makeDir(implBusinessLogicBasePath);
+      renderFile(configuration, config.componentBusinessLogicTemplate, implBusinessLogicBasePath, 'Logic.java');
 
-    if (answers.hasRepository && config.componentRepositoryTemplate) {
-      // impl.data
-      const implDataBasePath = [implBasePath, 'data'].join('/');
-      makeDir(implDataBasePath);
-      renderFile(configuration, config.componentRepositoryTemplate, implDataBasePath, 'Repository.java');
+      // impl.businesslogic.mapper
+      const implMapperBasePath = [implBusinessBasePath, 'mapper'].join('/');
+      makeDir(implMapperBasePath);
+      renderFile(configuration, config.componentDataObjectMapperTemplate, implMapperBasePath, 'Mapper.java');
 
-      if (config.componentEntityTemplate) {
-        // impl.data.entities
-        const implEntitiesBasePath = [implDataBasePath, 'entities'].join('/');
-        makeDir(implEntitiesBasePath);
-        renderFile(configuration, config.componentEntityTemplate, implEntitiesBasePath, 'Entity.java');
+      if (answers.hasRepository && config.componentRepositoryTemplate) {
+        // impl.data
+        const implDataBasePath = [implBasePath, 'data'].join('/');
+        makeDir(implDataBasePath);
+        renderFile(configuration, config.componentRepositoryTemplate, implDataBasePath, 'Repository.java');
+
+        if (config.componentEntityTemplate) {
+          // impl.data.entities
+          const implEntitiesBasePath = [implDataBasePath, 'entities'].join('/');
+          makeDir(implEntitiesBasePath);
+          renderFile(configuration, config.componentEntityTemplate, implEntitiesBasePath, 'Entity.java');
+        }
       }
     }
 
@@ -176,7 +181,7 @@ ${parameters}
       renderFile(configuration, config.resourceTransferObjectMapperTemplate, transferObjectMapperBasePath, 'Mapper.java');
     }
 
-    return 'Component created: ' + basePath;
+    return 'Component created';
   });
 
   plop.setGenerator('spring-component', {
@@ -195,6 +200,12 @@ ${parameters}
     prompts: [
       ...defaultPrompts,
       {
+        type: 'confirm',
+        name: 'hasRepository',
+        message: 'True, if the component has a data repository to access the database',
+        default: false
+      },
+      {
         type: 'input',
         name: 'resourcePackage',
         message: 'Enter the resource resourcePackage, e.g. "com.mycompany.app.resources"',
@@ -209,6 +220,29 @@ ${parameters}
     ],
     actions: [
       createSpringComponent,
+      ...defaultActions
+    ]
+  });
+
+  plop.setGenerator('spring-resource', {
+    description: 'Generates a spring component',
+    prompts: [
+      ...defaultPrompts,
+      {
+        type: 'input',
+        name: 'resourcePackage',
+        message: 'Enter the resource resourcePackage, e.g. "com.mycompany.app.resources"',
+        default: null
+      },
+      {
+        type: 'input',
+        name: 'resourcePath',
+        message: 'Enter the REST resource source code directory, e.g. "/user/project-resources/src/main/java"',
+        default: null
+      },
+    ],
+    actions: [
+      createSpringResource,
       ...defaultActions
     ]
   });

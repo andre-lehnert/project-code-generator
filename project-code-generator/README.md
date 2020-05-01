@@ -54,6 +54,7 @@ A Spring component uses the Spring Context annotations and a Spring Data JPA rep
 
 `plop spring-component -- --componentPath ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --hasRepository true --componentName MySpring`
 `plop spring-component-with-resource -- --componentPath ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --resourcePath ./test/my-app/src/main/java --resourcePackage com.mycompany.app.resources --hasRepository true --componentName MySpringWithResource`
+`plop spring-resource -- --componentPath ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --resourcePath ./test/my-app/src/main/java --resourcePackage com.mycompany.app.resources --componentName MySpringResource`
 
 ```
 --componentPath : Path to your source code directory
