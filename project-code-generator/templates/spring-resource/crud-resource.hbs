@@ -1,0 +1,80 @@
+package {{resourceBasePackage}};
+
+import {{resourceBasePackage}}.types.{{componentName}}TO;
+import {{resourceBasePackage}}.types.{{componentName}}sCTO;
+import {{resourceBasePackage}}.mapper.{{componentName}}Mapper;
+import {{componentBasePackage}}.api.{{componentName}}Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * TODO [AL]: Add class documentation
+ *
+ * @author Andre Lehnert, eXXcellent solutions consulting and software gmbh
+ */
+@RestController
+@CrossOrigin
+@RequestMapping("v1/{{lower componentName}}s")
+public class {{componentName}}sResourceV1 {
+
+  private static final Logger LOG = LoggerFactory.getLogger({{componentName}}sResourceV1.class);
+
+  private final {{componentName}}Component {{lower componentName}}Component;
+
+  @Autowired
+  public {{componentName}}sResourceV1({{componentName}}Component {{lower componentName}}Component) {
+    this.{{lower componentName}}Component = {{lower componentName}}Component;
+  }
+
+  @RequestMapping(
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public {{componentName}}sCTO findAll() {
+    var {{lower componentName}}List = {{lower componentName}}Component.findAll();
+    return {{componentName}}Mapper.to{{componentName}}sCTO.apply({{lower componentName}}List);
+  }
+
+  @RequestMapping(
+      method = RequestMethod.GET,
+      path = "{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public {{componentName}}TO findById(@PathVariable("id") Long id) {
+    return {{componentName}}Mapper.to{{componentName}}TO.apply({{lower componentName}}Component.findById(id));
+  }
+
+  @RequestMapping(
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<{{componentName}}TO> create(@RequestBody {{componentName}}TO {{lower componentName}}TO) {
+    var {{lower componentName}}DO = {{componentName}}Mapper.to{{componentName}}DO.apply({{lower componentName}}TO);
+    var created{{componentName}}DO = {{lower componentName}}Component.create({{lower componentName}}DO);
+    var response = {{componentName}}Mapper.to{{componentName}}TO.apply(created{{componentName}}DO);
+    return new ResponseEntity<>(response, HttpStatus.CREATED);
+  }
+
+  @RequestMapping(
+      method = RequestMethod.PUT,
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public {{componentName}}TO update(@RequestBody {{componentName}}TO {{lower componentName}}TO) {
+    var {{lower componentName}}DO = {{componentName}}Mapper.to{{componentName}}DO.apply({{lower componentName}}TO);
+    var updated{{componentName}}DO = {{lower componentName}}Component.update({{lower componentName}}DO);
+    return {{componentName}}Mapper.to{{componentName}}TO.apply(updated{{componentName}}DO);
+  }
+
+  @RequestMapping(
+      method = RequestMethod.DELETE,
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<String> delete(@RequestBody {{componentName}}TO {{lower componentName}}TO) {
+    var locationDO = {{componentName}}Mapper.to{{componentName}}DO.apply({{lower componentName}}TO);
+    {{lower componentName}}Component.delete(locationDO);
+    return ResponseEntity.ok().build();
+  }
+}

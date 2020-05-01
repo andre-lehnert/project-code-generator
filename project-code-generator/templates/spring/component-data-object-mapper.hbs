@@ -1,7 +1,9 @@
 package {{componentBasePackage}}.impl.businesslogic.mapper;
 
 import {{componentBasePackage}}.api.types.{{componentName}}DO;
-
+{{#if hasRepository}}
+import {{componentBasePackage}}.impl.data.entities.{{componentName}}Entity;
+{{/if}}
 import java.util.function.Function;
 
 /**
@@ -13,11 +15,21 @@ public final class {{componentName}}Mapper {
 
   private {{componentName}}Mapper() {}
 
-  public static final Function<Object, {{componentName}}DO> to{{componentName}}DO = entity -> {
+  {{#if hasRepository}}
+  public static final Function<{{componentName}}Entity, {{componentName}}DO> to{{componentName}}DO = entity -> {
     var {{lower componentName}}DO = new {{componentName}}DO();
 
     // TODO: set parameters
 
     return inspectorDO;
   };
+  {{else}}
+  public static final Function<Object, {{componentName}}DO> to{{componentName}}DO = input -> {
+    var {{lower componentName}}DO = new {{componentName}}DO();
+
+    // TODO: set parameters
+
+    return {{lower componentName}}DO;
+  };
+  {{/if}}
 }

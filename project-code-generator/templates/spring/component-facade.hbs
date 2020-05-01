@@ -8,6 +8,8 @@ import {{componentBasePackage}}.impl.businesslogic.mapper.{{componentName}}Mappe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * TODO [AL]: Add class documentation
  *
@@ -23,5 +25,28 @@ public class {{componentName}}Facade implements {{componentName}}Component {
     this.{{lower componentName}}Logic = {{lower componentName}}Logic;
   }
 
-
+    @Override
+    public List<{{componentName}}DO> findAll() {
+      return null;
+    }
+  
+    @Override
+    public {{componentName}}DO findById(Long {{lower componentName}}Id) {
+      return null;
+    }
+  
+    @Override
+    public {{componentName}}DO create({{componentName}}DO new{{componentName}}DO) {
+      return null;
+    }
+  
+    @Override
+    public {{componentName}}DO update({{componentName}}DO {{lower componentName}}DO) {
+      return null;
+    }
+  
+    @Override
+    public void delete({{componentName}}DO {{lower componentName}}DO) {
+  
+    }
 }

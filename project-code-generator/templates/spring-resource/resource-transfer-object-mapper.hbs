@@ -1,0 +1,45 @@
+package {{resourceBasePackage}}.mapper;
+
+import {{resourceBasePackage}}.types.{{componentName}}TO;
+import {{resourceBasePackage}}.types.{{componentName}}sCTO;
+import {{componentBasePackage}}.api.types.{{componentName}}DO;
+
+import java.util.function.Function;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * TODO [AL]: Add class documentation
+ *
+ * @author Andre Lehnert, eXXcellent solutions consulting and software gmbh
+ */
+public final class {{componentName}}Mapper {
+
+  private {{componentName}}Mapper() {}
+
+  public static final Function<List<{{componentName}}DO>, {{componentName}}sCTO> to{{componentName}}sCTO = {{lower componentName}}DOList -> {
+    var {{lower componentName}}TOs = {{lower componentName}}DOList.stream()
+        .map({{componentName}}Mapper.to{{componentName}}TO)
+        .collect(Collectors.toList());
+
+    var {{lower componentName}}sCTO = new {{componentName}}sCTO({{lower componentName}}TOs);
+
+    return {{lower componentName}}sCTO;
+  };
+
+  public static final Function<{{componentName}}DO, {{componentName}}TO> to{{componentName}}TO = {{lower componentName}}DO -> {
+    var {{lower componentName}}TO = new {{componentName}}TO();
+
+    // TODO: set parameters
+
+    return {{lower componentName}}TO;
+  };
+
+  public static final Function<{{componentName}}TO, {{componentName}}DO> to{{componentName}}DO = {{lower componentName}}TO -> {
+      var {{lower componentName}}DO = new {{componentName}}DO();
+
+      // TODO: set parameters
+
+      return {{lower componentName}}DO;
+    };
+}

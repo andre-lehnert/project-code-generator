@@ -39,10 +39,10 @@ Following file structure will be generated:
 
 
 #### Plain Java Component
-`plop java-component -- --path ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --hasRepository false --componentName MyJava`
+`plop java-component -- --componentPath ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --hasRepository false --componentName MyJava`
 
 ```
---path : Path to your source code directory
+--componentPath : Path to your source code directory
 --componentPackage : Existing package inside the --path source code directories
 --componentName : Name of your component
 --hasRepository : Should I generate the .data package? (default = false)
@@ -52,11 +52,14 @@ Following file structure will be generated:
 
 A Spring component uses the Spring Context annotations and a Spring Data JPA repository.
 
-`plop spring-component -- --path ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --hasRepository true --componentName MySpring`
+`plop spring-component -- --componentPath ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --hasRepository true --componentName MySpring`
+`plop spring-component-with-resource -- --componentPath ./test/my-app/src/main/java --componentPackage com.mycompany.app.components --resourcePath ./test/my-app/src/main/java --resourcePackage com.mycompany.app.resources --hasRepository true --componentName MySpringWithResource`
 
 ```
---path : Path to your source code directory
+--componentPath : Path to your source code directory
 --componentPackage : Existing package inside the --path source code directories
+--resourcePath : Path to your source code directory of the resources
+--resourcePackage : Existing package inside the --resourcePath source code directories
 --componentName : Name of your component
 --hasRepository : Should I generate the .data package? (default = false)
 ```

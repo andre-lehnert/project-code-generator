@@ -2,6 +2,8 @@ package {{componentBasePackage}}.api;
 
 import {{componentBasePackage}}.api.types.{{componentName}}DO;
 
+import java.util.List;
+
 /**
  * TODO [AL]: Add class documentation
  *
@@ -9,4 +11,13 @@ import {{componentBasePackage}}.api.types.{{componentName}}DO;
  */
 public interface {{componentName}}Component {
 
+  List<{{componentName}}DO> findAll();
+
+  {{componentName}}DO findById(Long {{lower componentName}}Id);
+
+  {{componentName}}DO create({{componentName}}DO new{{lower componentName}}DO);
+
+  {{componentName}}DO update({{componentName}}DO {{lower componentName}}DO);
+
+  void delete({{componentName}}DO {{lower componentName}}DO);
 }

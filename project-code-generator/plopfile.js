@@ -34,7 +34,7 @@ ${parameters}
   const defaultPrompts = [
     {
       type: 'input',
-      name: 'path',
+      name: 'componentPath',
       message: 'Enter the target maven src folder path, e.g. "/user/project/src/main/java"'
     },
     {
@@ -57,18 +57,21 @@ ${parameters}
   ];
   const createSpringComponent =  {
     type: 'createComponent',
-    path: '{{path}}',
     componentInterfaceTemplate: './templates/spring/component-interface.hbs',
     componentFacadeTemplate: './templates/spring/component-facade.hbs',
     componentBusinessLogicTemplate: './templates/spring/component-business-logic.hbs',
     componentDataObjectTemplate: './templates/spring/component-data-object.hbs',
     componentDataObjectMapperTemplate: './templates/spring/component-data-object-mapper.hbs',
     componentEntityTemplate: './templates/spring/component-entity.hbs',
-    componentRepositoryTemplate: './templates/spring/component-repository.hbs'
+    componentRepositoryTemplate: './templates/spring/component-repository.hbs',
+
+    resourceTemplate: './templates/spring-resource/crud-resource.hbs',
+    resourceTransferObjectTemplate: './templates/spring-resource/resource-transfer-object.hbs',
+    resourceTransferObjectMapperTemplate: './templates/spring-resource/resource-transfer-object-mapper.hbs',
+    resourceCompositeTransferObjectTemplate: './templates/spring-resource/resource-composite-transfer-object.hbs',
   };
   const createPlainJavaComponent = {
     type: 'createComponent',
-    path: '{{path}}',
     componentInterfaceTemplate: './templates/plain-java/component-interface.hbs',
     componentFacadeTemplate: './templates/plain-java/component-facade.hbs',
     componentBusinessLogicTemplate: './templates/plain-java/component-business-logic.hbs',
@@ -76,23 +79,39 @@ ${parameters}
     componentDataObjectMapperTemplate: './templates/plain-java/component-data-object-mapper.hbs'
   };
 
-  plop.addHelper('lower', function (p) {
+  plop.addHelper('lowerCase', function (p) {
     return p.toLowerCase();
   });
-  plop.addHelper('upper', function (p) {
+  plop.addHelper('lower', function (p) {
+    return p.substr(0, 1).toLowerCase() + p.substr(1);
+  });
+  plop.addHelper('upperCase', function (p) {
     return p.toUpperCase();
   });
 
   plop.setActionType('createComponent', function (answers, config, plop) {
-    const javaSrcPath = config.path.replace('{{path}}', answers.path);
     const packagePath = answers.componentPackage.split('.').join('/');
-    const basePath = [javaSrcPath, packagePath, answers.componentName.toLowerCase()].join('/');
+    const basePath = [answers.componentPath, packagePath, answers.componentName.toLowerCase()].join('/');
     makeDir(basePath);
+
+    const hasResource = !!answers.resourcePackage;
+    let resourceBasePath;
+    let resourceBasePackage;
+    if (hasResource) {
+      // <resources>
+      const resourcePackagePath = answers.resourcePackage.split('.').join('/');
+      answers.resourcePath = !!answers.resourcePath ? answers.resourcePath : answers.componentPath;
+      resourceBasePath = [answers.resourcePath, resourcePackagePath, answers.componentName.toLowerCase()].join('/');
+      resourceBasePackage = [answers.resourcePackage, answers.componentName.toLowerCase()].join('.');
+      makeDir(resourceBasePath);
+    }
 
     const configuration = {
       answers: {
         ...answers,
         componentBasePackage: [answers.componentPackage, answers.componentName.toLowerCase()].join('.'),
+        hasResource: hasResource,
+        resourceBasePackage: resourceBasePackage
       },
       plop: plop,
     };
@@ -140,21 +159,66 @@ ${parameters}
       }
     }
 
+    // REST resources
+    if (hasResource) {
+      // <resources>
+      renderFile(configuration, config.resourceTemplate, resourceBasePath, 'sResourceV1.java');
+
+      // <resource>.types
+      const typesBasePath = [resourceBasePath, 'types'].join('/');
+      makeDir(typesBasePath);
+      renderFile(configuration, config.resourceTransferObjectTemplate, typesBasePath, 'TO.java');
+      renderFile(configuration, config.resourceCompositeTransferObjectTemplate, typesBasePath, 'sCTO.java');
+
+      // <resources>.mapper
+      const transferObjectMapperBasePath = [resourceBasePath, 'mapper'].join('/');
+      makeDir(transferObjectMapperBasePath);
+      renderFile(configuration, config.resourceTransferObjectMapperTemplate, transferObjectMapperBasePath, 'Mapper.java');
+    }
+
     return 'Component created: ' + basePath;
   });
 
   plop.setGenerator('spring-component', {
     description: 'Generates a spring component',
-    prompts: defaultPrompts,
+    prompts: [
+      ...defaultPrompts
+    ],
     actions: [
       createSpringComponent,
       ...defaultActions
     ]
   });
 
+  plop.setGenerator('spring-component-with-resource', {
+    description: 'Generates a spring component',
+    prompts: [
+      ...defaultPrompts,
+      {
+        type: 'input',
+        name: 'resourcePackage',
+        message: 'Enter the resource resourcePackage, e.g. "com.mycompany.app.resources"',
+        default: null
+      },
+      {
+        type: 'input',
+        name: 'resourcePath',
+        message: 'Enter the REST resource source code directory, e.g. "/user/project-resources/src/main/java"',
+        default: null
+      },
+    ],
+    actions: [
+      createSpringComponent,
+      ...defaultActions
+    ]
+  });
+
+
   plop.setGenerator('java-component', {
     description: 'Generates a plain java component',
-    prompts: defaultPrompts,
+    prompts: [
+      ...defaultPrompts
+    ],
     actions: [
       createPlainJavaComponent,
       ...defaultActions

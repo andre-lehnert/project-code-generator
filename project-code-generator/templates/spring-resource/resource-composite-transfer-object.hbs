@@ -1,0 +1,29 @@
+package {{resourceBasePackage}}.types;
+
+import java.util.List;
+
+/**
+ * TODO [AL]: Add class documentation
+ *
+ * @author Andre Lehnert, eXXcellent solutions consulting and software gmbh
+ */
+public class {{componentName}}sCTO {
+
+  private List<{{componentName}}TO> {{lower componentName}}TOs;
+
+  public {{componentName}}sCTO() {
+  }
+
+  public {{componentName}}sCTO(List<{{componentName}}TO> {{lower componentName}}TOs) {
+    this.{{lower componentName}}TOs = {{lower componentName}}TOs;
+  }
+
+  public List<{{componentName}}TO> get{{componentName}}s() {
+    return {{lower componentName}}TOs;
+  }
+
+  public void set{{componentName}}s(List<{{componentName}}TO> {{lower componentName}}TOs) {
+    this.{{lower componentName}}TOs = {{lower componentName}}TOs;
+  }
+
+}
