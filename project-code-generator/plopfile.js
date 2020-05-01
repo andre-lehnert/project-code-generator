@@ -100,8 +100,8 @@ ${parameters}
       // <resources>
       const resourcePackagePath = answers.resourcePackage.split('.').join('/');
       answers.resourcePath = !!answers.resourcePath ? answers.resourcePath : answers.componentPath;
-      resourceBasePath = [answers.resourcePath, resourcePackagePath, answers.componentName.toLowerCase()].join('/');
-      resourceBasePackage = [answers.resourcePackage, answers.componentName.toLowerCase()].join('.');
+      resourceBasePath = [answers.resourcePath, resourcePackagePath, answers.componentName.toLowerCase() + 's'].join('/');
+      resourceBasePackage = [answers.resourcePackage, answers.componentName.toLowerCase() + 's'].join('.');
       makeDir(resourceBasePath);
     }
 
