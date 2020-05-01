@@ -2,3 +2,5 @@
 .idea
 node_modules
 package-lock.json
+/test/my-app/src/main/java/com/mycompany/app/components/*
+!/test/my-app/src/main/java/com/mycompany/app/components/package-info.java
