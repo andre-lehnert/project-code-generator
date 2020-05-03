@@ -21,7 +21,7 @@ public final class {{componentName}}Mapper {
 
     // TODO: set parameters
 
-    return inspectorDO;
+    return {{lower componentName}}DO;
   };
   {{else}}
   public static final Function<Object, {{componentName}}DO> to{{componentName}}DO = input -> {
